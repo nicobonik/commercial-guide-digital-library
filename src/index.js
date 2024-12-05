@@ -5,6 +5,12 @@ import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+if (!localStorage.getItem('theme')) {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (prefersDark) {
+    document.documentElement.classList.add('dark-mode');
+  }
+}
 root.render(
   // <React.StrictMode>
     <App />

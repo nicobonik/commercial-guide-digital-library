@@ -2,11 +2,47 @@ import { extractTextFromPDF } from '../utils/pdfUtils';
 import { saveTextData } from './indexedDB';
 
 // List all PDF file names in the pdfs/ folder
-const PDF_FOLDER_URL = '/pdfs/';
-const PDF_FILES = [
-  '1876-full.pdf',
-  'Mangiarotti-1871.pdf'
+export const PDF_FOLDER_URL = '/pdfs/';
+export const PDF_FILES = [
   // Add all your filenames here
+  'Mangiarotti 1869.pdf',
+  'Mangiarotti 1871.pdf',
+  'Mangiarotti 1873.pdf',
+  'Mangiarotti 1874.pdf',
+  'Mangiarotti 1875.pdf',
+  'Mangiarotti 1876.pdf',
+  'Mangiarotti 1878.pdf',
+  'Mangiarotti 1879.pdf',
+  'Mangiarotti 1880.pdf',
+  'Mangiarotti 1881.pdf',
+  'Mangiarotti 1882.pdf',
+  'Mangiarotti 1883.pdf',
+  'Mangiarotti 1884.pdf',
+  'Mangiarotti 1885.pdf',
+  'Mangiarotti 1889.pdf',
+  'Mangiarotti 1890.pdf',
+  'Mangiarotti 1891.pdf',
+  'Mangiarotti 1892.pdf',
+  'Mangiarotti 1893.pdf',
+  'Mangiarotti 1894.pdf',
+  'Mangiarotti 1895.pdf',
+  'Mangiarotti 1897.pdf',
+  'Mangiarotti 1898.pdf',
+  'Mangiarotti 1899.pdf',
+  'Mangiarotti 1900.pdf',
+  'Mangiarotti 1901.pdf',
+  'Mangiarotti 1902.pdf',
+  'Mangiarotti 1903.pdf',
+  'Mangiarotti 1904.pdf',
+  'Mangiarotti 1905.pdf',
+  'Mangiarotti 1906.pdf',
+  'Mangiarotti 1907.pdf',
+  'Mangiarotti 1908.pdf',
+  'Mangiarotti 1909.pdf',
+  'Mangiarotti 1910.pdf',
+  'Mangiarotti 1911.pdf',
+  'Mangiarotti 1912.pdf',
+  'Mangiarotti 1913.pdf',
 ];
 
 // Build the database by fetching and processing PDFs

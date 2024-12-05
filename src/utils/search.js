@@ -27,6 +27,7 @@ export async function search(query, strategy) {
     const results = [];
     const tx = db.transaction(STORE_NAME, 'readonly');
     const store = tx.store;
+    console.log(store);
 
     let cursor = await store.openCursor();
     while (cursor) {
