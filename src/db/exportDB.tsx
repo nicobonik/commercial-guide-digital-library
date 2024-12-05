@@ -1,4 +1,4 @@
-import { initDB, STORE_NAME} from '../db/indexedDB';
+import { initDB, STORE_NAME} from './indexedDB';
 
 const exportIndexedDBToJSON = async (dbName: string, storeName: string) => {
     return new Promise<object>((resolve, reject) => {
