@@ -6,12 +6,13 @@ import Results from './Results';
 const Search = () => {
   const [results, setResults] = useState([]);
 
+
   useEffect(() => {
     loadJSONData('/TextDB-Pages.json');
   }, []);
 
-  const handleSearch = async (query) => {
-    const searchResults = await searchFromJSON(query, 'exact');
+  const handleSearch = async (query, isExactSearch) => {
+    const searchResults = await searchFromJSON(query, isExactSearch);
     setResults(searchResults);
   };
 

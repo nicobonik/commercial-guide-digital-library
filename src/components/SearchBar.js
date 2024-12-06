@@ -2,13 +2,18 @@ import React, { useState } from 'react';
 
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState('');
+    const [isExactSearch, setIsExactSearch] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearch(query);
+    onSearch(query, isExactSearch);
   };
 
-  return (
+    const handleCheckboxChange = (event) => {
+        setIsExactSearch(event.target.checked); // Update the state based on checkbox value
+    };
+
+    return (
     <div className='search-bar-container'>
         <form onSubmit={handleSubmit}>
         <input
@@ -17,6 +22,14 @@ const SearchBar = ({ onSearch }) => {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search..."
         />
+            <label>
+                <input
+                    type="checkbox"
+                    checked={isExactSearch}
+                    onChange={handleCheckboxChange}
+                />
+                Exact Search
+            </label>
         <button type="submit">Search</button>
         </form>
     </div>
