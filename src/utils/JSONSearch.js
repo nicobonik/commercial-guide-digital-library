@@ -21,7 +21,7 @@ export const loadJSONData = async (url) => {
 };
 
 // Search function
-export const searchFromJSON = (query) => {
+export const searchFromJSON = (query, isExactSearch) => {
     query = query.trim().replace(/\s+/g, ' ').toLowerCase();  // Trim and normalize spaces
     if (!jsonData) {
         console.error('JSON data not loaded yet!');
@@ -36,9 +36,19 @@ export const searchFromJSON = (query) => {
             pageText: normalizeString(pageText),
         }))
     );
-
-    const results = data.filter((item) => item.pageText.includes(normalizeString(query)));
-    // Map results to include pdfId and page number
+    let results = []
+    console.log(isExactSearch)
+    if (isExactSearch) {
+        results = data.filter((item) => item.pageText.includes(normalizeString(query)));
+    }
+    else {
+         results = data.filter((item) => {
+            const words = item.pageText.split(/\s+/); // Split pageText into words
+            const queryNormalized = normalizeString(query);
+            return words.some(word => calculateSimilarity(word, queryNormalized) > 0.8);
+        });
+    }
+        // Map results to include pdfId and page number
         return results.map(({ pdfId, pageNum, pageText }) => ({
             pdfId,
             pageNum,
@@ -65,3 +75,43 @@ export const searchFromJSON = (query) => {
     // }));
             
 };
+
+
+function calculateSimilarity(str1, str2) {
+    const commonSubsequenceLength = (s1, s2) => {
+        let longest = 0;
+        let start1 = 0, start2 = 0;
+        let length = 0;
+
+        for (let i = 0; i < s1.length; i++) {
+            for (let j = 0; j < s2.length; j++) {
+                length = 0;
+                while (s1[i + length] === s2[j + length] && i + length < s1.length && j + length < s2.length) {
+                    length++;
+                }
+                if (length > longest) {
+                    longest = length;
+                    start1 = i;
+                    start2 = j;
+                }
+            }
+        }
+        return { length: longest, start1, start2 };
+    };
+
+    if (!str1 || !str2) return 0;
+
+    let totalLength = str1.length + str2.length;
+    let similarity = 0;
+
+    while (str1.length > 0 && str2.length > 0) {
+        const { length, start1, start2 } = commonSubsequenceLength(str1, str2);
+        if (length === 0) break;
+
+        similarity += length * 2;
+        str1 = str1.slice(0, start1) + str1.slice(start1 + length);
+        str2 = str2.slice(0, start2) + str2.slice(start2 + length);
+    }
+
+    return similarity / totalLength;
+}
