@@ -17,6 +17,11 @@ const Search = () => {
 
   return (
     <div>
+      <div className='header'>
+        <h1>Advanced Search</h1>
+        <p>Search tool created for the Commercial Guide Digital Library</p>
+      </div>
+      
       <SearchBar onSearch={handleSearch} />
       <Results results={results} />
     </div>
