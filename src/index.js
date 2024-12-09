@@ -11,6 +11,7 @@ if (!localStorage.getItem('theme')) {
     document.documentElement.classList.add('dark-mode');
   }
 }
+document.title = "Commercial Guide Digital Library"
 root.render(
   // <React.StrictMode>
     <App />
