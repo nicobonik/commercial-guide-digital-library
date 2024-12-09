@@ -281,6 +281,10 @@ body {
   color: var(--text-color);
 }
 
+.about-section a {
+  color: var(--accent-color-bold)
+}
+
 .about-section-content {
   display: flex; 
   align-items: flex-start;
@@ -289,7 +293,7 @@ body {
 .about-section-content img {
     width: 200px;
     height: 200px;
-    border-radius: 50%;
+    border-radius: 20%;
     margin-right: 20px;
     object-fit: cover;
 }
