@@ -1,36 +1,74 @@
 import React, { useState } from 'react';
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = ({ onSearch, onSearchAddress }) => {
   const [query, setQuery] = useState('');
-    const [isExactSearch, setIsExactSearch] = useState(true);
+  const [addressQuery, setAddressQuery] = useState('');
+    const [isExactSearch, setIsExactSearch] = useState(false);
+    const [isAddressSearch, setIsAddressSearch] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearch(query, isExactSearch);
+    if(isAddressSearch) {
+      onSearchAddress(query, addressQuery, isExactSearch);
+    } else {
+      onSearch(query, isExactSearch);
+    }
   };
 
-    const handleCheckboxChange = (event) => {
-        setIsExactSearch(event.target.checked); // Update the state based on checkbox value
-    };
+  const handleCheckboxChange = (event) => {
+      setIsExactSearch(event.target.checked); // Update the state based on checkbox value
+  };
+
+  const handleAddressSearchToggle = (event) => {
+      setIsAddressSearch(event.target.checked); // Update the state based on checkbox value
+  };
 
     return (
     <div className='search-bar-container'>
         <form onSubmit={handleSubmit}>
-        <input
+        {isAddressSearch ? 
+        <div className='search-bar-container'>
+          <input 
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Church, Street, Sestiere..."
+            />
+            
+          <input 
+            type="text"
+            value={addressQuery}
+            onChange={(e) => setAddressQuery(e.target.value)}
+            placeholder="Address Number..."
+            />
+        </div>
+        :
+          <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search..."
         />
-            <label>
-                <input
+        }
+        
+        <button type="submit">Search</button>
+        <label>
+                <input className="search-bar-btn"
                     type="checkbox"
                     checked={isExactSearch}
                     onChange={handleCheckboxChange}
                 />
-                Exact Search
-            </label>
-        <button type="submit">Search</button>
+                Exact Match Search
+        </label>
+        <label>
+                <input className="search-bar-btn"
+                    type="checkbox"
+                    checked={isAddressSearch}
+                    onChange={handleAddressSearchToggle}
+                    defaultChecked="false"
+                />
+                Address Searcher
+        </label>
         </form>
     </div>
   );

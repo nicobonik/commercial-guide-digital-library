@@ -1,4 +1,3 @@
-import Fuse from 'fuse.js';
 
 let jsonData = null; // Variable to hold the parsed JSON data
 
@@ -21,7 +20,7 @@ export const loadJSONData = async (url) => {
 };
 
 // Search function
-export const searchFromJSON = (query, isExactSearch) => {
+export const searchFromJSON = async (query, isExactSearch) => {
     query = query.trim().replace(/\s+/g, ' ').toLowerCase();  // Trim and normalize spaces
     if (!jsonData) {
         console.error('JSON data not loaded yet!');
@@ -39,42 +38,123 @@ export const searchFromJSON = (query, isExactSearch) => {
     let results = []
     console.log(isExactSearch)
     if (isExactSearch) {
-        results = data.filter((item) => item.pageText.includes(normalizeString(query)));
+        let queryIndices = [];
+        results = data.filter((item) => {
+            const normalizedQuery = normalizeString(query);
+            const words = item.pageText.split(/\s+/); // Split normalized pageText into words
+            const queryWords = normalizedQuery.split(/\s+/); // Split normalized query into words
+
+            // Find if the query exists in the normalized pageText
+            const queryMatched = item.pageText.includes(normalizedQuery);
+            if (!queryMatched) {
+                return false;
+            }
+
+            // Find the starting index of the query in the word list
+            const queryLength = queryWords.length;
+            for (let i = 0; i <= words.length - queryLength; i++) {
+                const slice = words.slice(i, i + queryLength).join(" ");
+                if (slice === normalizedQuery) {
+                    // Store the starting index
+                    item.index = i; // Attach index to the item
+                    return true; // Keep this item in the filtered results
+                }
+            }
+
+            return false; // Query not found
+        });
+       
+        return results.map(({ pdfId, pageNum, pageText, index }) => ({
+            pdfId,
+            pageNum,
+            index,
+        }));
     }
     else {
-         results = data.filter((item) => {
+        let queryIndices = [];
+        results = data.filter((item) => {
             const words = item.pageText.split(/\s+/); // Split pageText into words
-            const queryNormalized = normalizeString(query);
-            return words.some(word => calculateSimilarity(word, queryNormalized) > 0.8);
+            const queryWords = normalizeString(query).split(/\s+/); // Split query into words and normalize
+            const phraseMatched = areWordsClose(queryWords, words, 3);
+            if(phraseMatched !== false) {
+                // console.log(phraseMatched.index);
+                queryIndices.push(phraseMatched.index);
+                return true;
+            }
+            return false;
+            // return queryWords.every(queryWord => 
+            //     words.some(word => {
+            //         const similarity = calculateSimilarity(word, queryWord);
+            //         if (similarity > 0.8) {
+            //             console.log(word + ", " + similarity);
+            //         }
+            //         return similarity > 0.8;
+            //     })
+            // );
         });
-    }
-        // Map results to include pdfId and page number
-        return results.map(({ pdfId, pageNum, pageText }) => ({
+        // console.log(queryIndices);
+        const resultsWithoutText = results.map(({ pdfId, pageNum, pageText }) => ({
             pdfId,
             pageNum,
         }));
+        resultsWithoutText.forEach((item, index) => {
+            item["index"] = queryIndices[index];
+        })
+        return resultsWithoutText;
+    }
+        
 
-        // Initialize Fuse.js
-    // const fuse = new Fuse(data, {
-    //     keys: ['pageText'], // Specify the key(s) to search
-    //     threshold: 0.0, // Adjust for sensitivity (0 = exact match, 1 = very fuzzy)
-    //     includeScore: true, // Optionally include the score for debugging
-    //     isCaseSensitive: false, // Make the search case-insensitive
-    //     useExtendedSearch: true
-    // });
-
-    // Perform the fuzzy search
-    // const results = fuse.search(normalizeString(query));
-    // console.log(results);
-
-    // Return the matched items
-    // return results.map(({ item }) => ({
-    //     pdfId: item.pdfId,
-    //     pageNum: item.pageNum,
-    //     // pageText: item.pageText,
-    // }));
-            
 };
+
+const areWordsClose = (queryWords, pageText, maxDistance) => {
+    // Map to store the positions of each word in the pageText
+    const positions = queryWords.map(word => {
+        const indices = [];
+        pageText.forEach((textWord, index) => {
+            if (calculateSimilarity(word, textWord) > 0.8) {
+                indices.push(index);
+            }
+        });
+        return indices;
+    });
+
+    // If any word is not found in the text, return false
+    if (positions.some(posArray => posArray.length === 0)) {
+        return false;
+    }
+
+    // Helper function to find the closest sequence starting at the given index
+    const findClosestSequence = (startIndex) => {
+        let currentIndex = startIndex;
+
+        for (let i = 1; i < queryWords.length; i++) {
+            const nextPositions = positions[i];
+            const closestNext = nextPositions.find(pos => Math.abs(pos - currentIndex) <= maxDistance);
+
+            if (closestNext === undefined) {
+                return false; // No valid next word found within the distance
+            }
+
+            currentIndex = closestNext; // Update the current index to the next word's position
+        }
+
+        return startIndex; // Return the start index if the sequence is valid
+    };
+
+    // Iterate over starting positions of the first word
+    for (let start of positions[0]) {
+        const sequenceStart = findClosestSequence(start);
+        if (sequenceStart !== false) {
+            return {
+                text: queryWords.join(" "),
+                index: sequenceStart
+            };
+        }
+    }
+
+    return false; // No valid sequence found
+};
+
 
 
 function calculateSimilarity(str1, str2) {

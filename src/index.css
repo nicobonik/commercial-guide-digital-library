@@ -313,7 +313,15 @@ body {
     color: var(--text-color)
 }
 
+.search-bar-container label {
+  text-align: center;
+}
 
+.search-bar-btn {
+  width: 30px;
+  height: 30px;
+  accent-color: var(--accent-color)
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
