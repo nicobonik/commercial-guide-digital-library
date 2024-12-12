@@ -27,7 +27,7 @@ const SearchBar = ({ onSearch, onSearchAddress }) => {
     <div className='search-bar-container'>
         <form onSubmit={handleSubmit}>
         {isAddressSearch ? 
-        <div className='search-bar-container'>
+        <div>
           <input 
             type="text"
             value={query}

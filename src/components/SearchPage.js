@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import SearchBar from './SearchBar';
 import {loadJSONData, searchFromJSON} from '../utils/JSONSearch';
 import Results from './Results';
 
 const Search = () => {
   const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const mergeSearchResults = (results1, results2) => {
     // Create a Set of unique keys from results2
@@ -33,18 +34,18 @@ const Search = () => {
     setResults(searchResults);
   };
 
-  const handleAddressSearch = async(query, addressQuery, isExactSearch) => {
+  const handleAddressSearch = useCallback( async (query, addressQuery, isExactSearch) => {
+    if(loading) return;
+
+    setLoading(true);
     const searchResults = await searchFromJSON(query, isExactSearch);
     const addressSearchResults = await searchFromJSON(addressQuery, true);
-
-    console.log(searchResults);
-    console.log(addressSearchResults);
-
 
     const combinedResults = mergeSearchResults(searchResults, addressSearchResults);
 
     setResults(combinedResults);
-  }
+    setLoading(false);
+  }, [loading])
 
   return (
     <div>
@@ -54,7 +55,10 @@ const Search = () => {
       </div>
       
       <SearchBar onSearch={handleSearch} onSearchAddress={handleAddressSearch} />
+      {
+      loading ? <div>Loading...</div> : 
       <Results results={results} />
+      }
     </div>
   );
 };

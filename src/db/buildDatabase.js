@@ -5,6 +5,12 @@ import { saveTextData } from './indexedDB';
 export const PDF_FOLDER_URL = '/pdfs/';
 export const PDF_FILES = [
   // Add all your filenames here
+  'Andreola 1846.pdf',
+  'Andreola 1847.pdf',
+  'Andreola 1848.pdf',
+  'Andreola 1853.pdf',
+  'Querini 1856.pdf',
+  'Gaetono Longo 1857.pdf',
   'Mangiarotti 1869.pdf',
   'Mangiarotti 1871.pdf',
   'Mangiarotti 1873.pdf',

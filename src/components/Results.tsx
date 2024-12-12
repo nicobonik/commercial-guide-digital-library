@@ -83,8 +83,9 @@ const Results: React.FC<ResultsProps> = ({ results }) => {
 
                 return (
                     <div className="result-entry" key={pdfId}>
+                        <div className="result-header">
                         <h3>
-                            {pdfId}: Pages{' '}
+                            <a href={`/pdfs/${pdfId}.pdf`}>{pdfId}</a>: Pages{' '}
                             {data.results.map((result, index) => (
                                 <button
                                     key={index}
@@ -111,6 +112,7 @@ const Results: React.FC<ResultsProps> = ({ results }) => {
                         >
                             {isViewerVisible ? 'Hide Viewer' : 'Show Viewer'}
                         </button>
+                        </div>
                         {isViewerVisible && (
                             <div
                                 style={{

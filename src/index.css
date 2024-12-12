@@ -35,6 +35,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.result-header {
+    position: sticky;
+    top: 49px; /* Adjust this value to control where the header sticks */
+    z-index: 10; /* Ensure it stays above other elements */
+    background-color: var(--border-color);
+    padding: 10px;
+}
+
+.result-header a {
+    text-decoration: none; /* Removes the underline */
+    color: inherit; /* Makes the color inherit from the parent element */
+}
+
 .result-entry {
   margin: 20px 0;
   padding: 15px;
@@ -84,6 +97,7 @@ body {
   font-size: 1em;
   color: white;
   background-color: var(--accent-color);
+  position: relative;
   border: none;
   border-radius: 8px;
   cursor: pointer;

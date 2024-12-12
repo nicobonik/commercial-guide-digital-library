@@ -2,7 +2,11 @@
 let jsonData = null; // Variable to hold the parsed JSON data
 
 const normalizeString = (str) => {
-  return str.trim().replace(/\s+/g, ' ').toLowerCase();  // Trim and normalize spaces
+    return str
+        .toLowerCase() // Convert to lowercase
+        .replace(/\./g, '') // Remove periods
+        .replace(/[\s]+/g, ' ') // Replace multiple spaces with a single space
+        .trim(); // Remove leading and trailing whitespace
 };
 
 // Load the JSON file into memory
@@ -38,9 +42,8 @@ export const searchFromJSON = async (query, isExactSearch) => {
     let results = []
     console.log(isExactSearch)
     if (isExactSearch) {
-        let queryIndices = [];
         results = data.filter((item) => {
-            const normalizedQuery = normalizeString(query);
+            const normalizedQuery = query;
             const words = item.pageText.split(/\s+/); // Split normalized pageText into words
             const queryWords = normalizedQuery.split(/\s+/); // Split normalized query into words
 

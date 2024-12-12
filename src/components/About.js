@@ -28,7 +28,7 @@ const About = () => {
             <div className="about-section">
                 <h2>Who We Are</h2>
                 <p>
-                    We are a group of  students at Worcester Polytechnic Institute completing a project on the preservation of Venice’s industrial history. By combining archival research with  digital tools, we’ve worked to turn historical records into something anyone can access and explore.
+                    We are a group of students at Worcester Polytechnic Institute completing a project on the preservation of Venice’s industrial history. By combining archival research with  digital tools, we’ve worked to turn historical records into something anyone can access and explore.
                 </p>
             </div>
 
